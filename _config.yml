@@ -1,14 +1,14 @@
 # Your presentation title
-title: Jekyll and Reveal.js
+title: Honestbee
 
 # The Reveal theme
-reveal_theme: black.css
+reveal_theme: honestbee.css
 
 # The Reveal transition
-reveal_transition: default
+reveal_transition: slide
 
 # Path to the used theme (defaults to the Reveal.js standard theme path)
-reveal_theme_path: reveal.js/css/theme/ 
+reveal_theme_path: theme/
 
 # Embed Server-side speaker notes?
 reveal_notes_server: false
