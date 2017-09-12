@@ -13,7 +13,7 @@ See the [example presentation][] created using the contents in this repository a
 
 First, [install Jekyll][]. After that, clone this repository and create a branch for your new presentation:
 
-    git clone --recursive https://github.com/dploeger/jekyll-revealjs.git
+    git clone --recursive https://github.com/honestbee/jekyll-revealjs.git
     git checkout -b presentation1
 
 Clean the Example presentation:
