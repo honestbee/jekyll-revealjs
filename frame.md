@@ -1,5 +1,14 @@
 This is Jon.
 Jon is a young entrepreneur, he and and a few friends start a business.
+They have this break-thu idea of selling vegetable online.
+
+Wait no more, Jon start implement his product right away.
+
+Let's assume Jon's database schema is as simple as this.
+```
+Orders: status, store_id
+Stores: name
+```
 
 Jon implement this back-end follow the standard REST approach. Everything is easy, no issue so far. 
 
@@ -97,8 +106,6 @@ With all of that hassle, Jon decide it's time to find a comprehensive solution t
 
 Jon found a thing call GraphQL.
 
-//TODO: fill in what is graphql
-
 Can graphql really solve all the problem that Jon is having?
 - Multiple round trip: with just 1 api call, client can retrieve any related data
 - Over-fetching data: this won't happend as client are always the one who specify what to return
@@ -125,10 +132,20 @@ An order has many fulfillments
     rails new graphql-honestbee
 
 #Add 2 model for Order and Order fulfillment
-    rails g model order status:string amount:integer
-    rails g model order_fulfillment status:string notes:string order:belongs_to
+    rails g model order status:string store:belongs_to
+    rails g model store name:string
 
-show what is the current state, of having to tables
+- show the models in sublime
+- add `has_many` relationship
+
+- create some mock data: 
+```
+    Store.create name: 'Cold Storage'
+    Store.create name: 'Fair Price'
+
+    Order.create! status: :processing, store: Store.first
+    Order.create! status: :pending, store: Store.second
+```
 
 #Add graphql gem
 
@@ -143,18 +160,8 @@ explain what what this step add to the project
 ```
 Types::OrderType = GraphQL::ObjectType.define do
   name "Order"
+  field :id, types.ID
   field :status, types.String
-  field :amount, types.Int
-  field :orderFulfillments, types[Types::OrderFulfillmentType], property: :order_fulfillments
-end
-```
--Add Order Fulfillment Type
-```
-Types::OrderFulfillmentType = GraphQL::ObjectType.define do
-  name "OrderFulfillment"
-  field :status, types.String
-  field :notes, types.String
-  field :order, Types::OrderType
 end
 ```
 
@@ -168,13 +175,17 @@ field :order do
     end
 end
 ```
-- create some mock data: 
-    ```
-    Order.create! status: :processing, amount: 10000
-    Order.create! status: :pending, amount: 50000
-    Order.first.order_fulfillments.create! status: :started, notes: 'Hello Jon'
-    Order.second.order_fulfillments.create! status: :pending, notes: 'Bye Jon'
-    ```
+
+- add store type
+```
+Types::StoreType = GraphQL::ObjectType.define do
+  name "Store"
+  field :id, types.ID
+  field :name, types.String
+end
+```
+
+- add store field to order type
 
 - Analyze query result, discover there is a n+1 situation
 
@@ -194,28 +205,12 @@ class Loaders::RecordLoader < GraphQL::Batch::Loader
 end
 
 ```
-- Create a foreign key loader class
-```
-    # Loader for record with foreign key
-    class Loaders::ForeignKeyLoader < GraphQL::Batch::Loader
-      def initialize(model, foreign_key)
-        @model = model
-        @foreign_key = foreign_key
-      end
 
-      def perform(foreign_key_ids)
-        records = @model.where(@foreign_key => foreign_key_ids).to_a
-        foreign_key_ids.each do |foreign_key_id|
-          matching_records = records.select { |record| foreign_key_id == record[@foreign_key] }
-          fulfill(foreign_key_id, matching_records)
-        end
-      end
-    end
-```
+- Add `use GraphQL::Batch` to the root schema file
 
 - Add this to the field
 ```
-resolve -> (obj, args, context) { Loaders::ForeignKeyLoader.for(OrderFulfillment, :order_id).load(obj["id"]) }
+resolve -> (obj, args, context) { Loaders::RecordLoader.for(Store).load(obj["id"]) }
 ```
 
 - Show that the n+1 issue has gone

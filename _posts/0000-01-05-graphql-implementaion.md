@@ -1,3 +1,11 @@
-# Backgrounds
+### How to implement GraphQL in rails?
 
-Or use different backgrounds.
+---
+
+### Create models
+
+![](/theme/db_schema.png)
+
+---
+
+### Define Graphql Schema
