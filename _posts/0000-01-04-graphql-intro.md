@@ -17,7 +17,7 @@ Note:
 ---
 
 ### What is the specifications?
-- Has only 1 end point: `/graphql` 
+- Has only 1 end-point: `/graphql` 
 - Independent from data model, platform, and framework
 - Answer on what is asked
 
@@ -79,17 +79,17 @@ Response
 
 ---
 
-### So can GraphQL so Jon problem?
+### So can GraphQL solve Jon's problems?
 
 - Multiple round trip {% fragment %}
 - Over-fetching data  {% fragment %}
-- Too many custom end point  {% fragment %}
+- Too many custom end-points  {% fragment %}
 - Slow to fulfill request from api users  {% fragment %}
 
 Note:
 - Multiple round trip: with just 1 api call, client can retrieve any related data
 - Over-fetching data: this won't happend as client are always the one who specify what to return
-- Too many custom end point: just 1 end point /graphql, serve all king of thing
+- Too many custom end-points: just 1 end point /graphql, serve all king of thing
 - Slow to fulfill api users request: no need to wait for backend, client can customize the payload however they want.
 
 -> this lead to:
