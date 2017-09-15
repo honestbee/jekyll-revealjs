@@ -107,3 +107,11 @@ Note:
 
 ## Everyone is happy
 ## Jon is happy! {% fragment %}
+
+---
+
+{% background green %}
+### Jon can finally sleep well at night again
+![](/theme/bed.png)
+
+
